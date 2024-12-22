@@ -1,4 +1,4 @@
-import {Box, Paper} from '@mui/material';
+import {Box, Paper, Snackbar} from '@mui/material';
 import {useCallback, useEffect, useState} from 'react';
 import {BottomNav} from './BottomNav';
 import {TrackerScreen} from './screens/TrackerScreen';
@@ -12,7 +12,7 @@ import {auth, getTrackingDataForDay, saveTrackingDataForDay} from './firebase';
 export function AppView() {
     const [currentUserId, setCurrentUser] = useState<string>(localStorage.getItem('userId') || '');
     const [currentTab, setCurrentTab] = useState<TabName>('tracker');
-    const [currentFirebaseUser, setCurrentFirebaseUser] = useState(auth.currentUser);
+    //const [currentFirebaseUser, setCurrentFirebaseUser] = useState(auth.currentUser);
     const [currentDate, setCurrentDate] = useState<Dayjs | null>(dayjs());
     const [foodEaten, setFoodEaten] = useState<Food | null>(null);
     const [urgency, setUrgency] = useState(0);
@@ -21,9 +21,12 @@ export function AppView() {
     const [hadCaffeine, setHadCaffeine] = useState(false);
     const [notes, setNotes] = useState('');
 
+    const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+
     useEffect(() => {
         auth.onAuthStateChanged((user) => {
-            setCurrentFirebaseUser(user);
+            //setCurrentFirebaseUser(user);
             console.log("Firebase user", user);
         });
     }, []);
@@ -66,6 +69,15 @@ export function AppView() {
         setNotes(newNotes);
     }
 
+    const handleSnackbar = (message: string) => {
+        setSnackbarMessage(message);
+        setIsSnackbarOpen(true);
+    }
+
+    const handleSnackbarClose = () => {
+        setIsSnackbarOpen(false);
+    }
+
     const handleSave = async () => {
         const dayTracking = {
             foodEatenId: foodEaten?.id ?? '',
@@ -77,7 +89,13 @@ export function AppView() {
         }
 
         if (currentDate != null) {
-            await saveTrackingDataForDay(currentUserId, currentDate.format("YYYY-MM-DD"), dayTracking);
+            try {
+                await saveTrackingDataForDay(currentUserId, currentDate.format("YYYY-MM-DD"), dayTracking);
+                handleSnackbar("Data saved");
+            } catch (e) {
+                console.error("Error saving data", e);
+                handleSnackbar("Error saving data");
+            }
         }
     }
 
@@ -139,6 +157,9 @@ export function AppView() {
                 <Paper sx={{position: 'fixed', bottom: 0, left: 0, right: 0}} elevation={3}>
                     <BottomNav changeCurrentTab={handleChangeCurrentTab} currentTab={currentTab}/>
                 </Paper>
+
+                <Snackbar open={isSnackbarOpen} onClose={handleSnackbarClose} message={snackbarMessage}
+                          autoHideDuration={3000}/>
             </Box>
         </main>
     )

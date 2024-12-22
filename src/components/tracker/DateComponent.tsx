@@ -15,11 +15,12 @@ export const DateComponent = ({date, onDateChange}: DateComponentProps) => {
     }
     return (
         <Box display="flex" alignItems="center" justifyContent="space-between" width={300}>
-            <Button variant="contained" onClick={changeDate(-1)} sx={{minWidth: 32}}>{"<"}</Button>
+            <Button variant="contained" onClick={changeDate(-1)} sx={{minWidth: 32, fontWeight: 'bold'}}>{"<"}</Button>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker label="Date" value={date} onChange={onDateChange} closeOnSelect={true}/>
+                <DatePicker label="Date" value={date} onChange={onDateChange} closeOnSelect={true}
+                            sx={{maxWidth: 150}}/>
             </LocalizationProvider>
-            <Button variant="contained" onClick={changeDate(1)} sx={{minWidth: 32}}>{">"}</Button>
+            <Button variant="contained" onClick={changeDate(1)} sx={{minWidth: 32, fontWeight: 'bold'}}>{">"}</Button>
         </Box>
     );
 }
