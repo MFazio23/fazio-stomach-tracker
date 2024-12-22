@@ -28,8 +28,12 @@ const saveData = async (userId: string, docId: string, data: unknown) => {
     await setDoc(doc(db, userId, docId), data);
 }
 
+const saveTrackingDataForDay = async (userId: string, dateString: string, data: FirebaseDayTracking) => {
+    return saveData(`stomach-tracker/users/${userId}`, dateString, data);
+}
+
 const getTrackingDataForDay = async (userId: string, dateString: string, onUpdate: (data: FirebaseDayTracking) => void) => {
-    return onSnapshot(doc(db, userId, dateString), (doc) => {
+    return onSnapshot(doc(db, `stomach-tracker/users/${userId}`, dateString), (doc) => {
         if (doc.exists()) {
             onUpdate(doc.data() as FirebaseDayTracking)
         } else {
@@ -38,4 +42,4 @@ const getTrackingDataForDay = async (userId: string, dateString: string, onUpdat
     });
 }
 
-export {app, auth, db, saveData, getTrackingDataForDay};
+export {app, auth, db, saveData, getTrackingDataForDay, saveTrackingDataForDay};

@@ -1,12 +1,12 @@
 import {Box, Button, Typography} from '@mui/material';
-import {getRedirectResult, GoogleAuthProvider, signInWithRedirect} from 'firebase/auth';
+import {getRedirectResult, GoogleAuthProvider, signInWithPopup} from 'firebase/auth';
 import {auth} from '../firebase';
 
 export function AuthScreen() {
     const provider = new GoogleAuthProvider();
 
     const handleSignInClicked = async () => {
-        await signInWithRedirect(auth, provider)
+        await signInWithPopup(auth, provider)
 
         const userCred = await getRedirectResult(auth);
 

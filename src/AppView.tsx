@@ -7,12 +7,12 @@ import {CalendarScreen} from './screens/CalendarScreen';
 import {TabName} from './types/TabName';
 import {Food} from './types/Food';
 import dayjs, {Dayjs} from 'dayjs';
-import {getTrackingDataForDay, saveData} from './firebase';
+import {auth, getTrackingDataForDay, saveTrackingDataForDay} from './firebase';
 
 export function AppView() {
     const [currentUserId, setCurrentUser] = useState<string>(localStorage.getItem('userId') || '');
     const [currentTab, setCurrentTab] = useState<TabName>('tracker');
-    //const [currentUser, setCurrentUser] = useState(auth.currentUser);
+    const [currentFirebaseUser, setCurrentFirebaseUser] = useState(auth.currentUser);
     const [currentDate, setCurrentDate] = useState<Dayjs | null>(dayjs());
     const [foodEaten, setFoodEaten] = useState<Food | null>(null);
     const [urgency, setUrgency] = useState(0);
@@ -21,11 +21,12 @@ export function AppView() {
     const [hadCaffeine, setHadCaffeine] = useState(false);
     const [notes, setNotes] = useState('');
 
-    /*useEffect(() => {
+    useEffect(() => {
         auth.onAuthStateChanged((user) => {
-            setCurrentUser(user);
+            setCurrentFirebaseUser(user);
+            console.log("Firebase user", user);
         });
-    }, []);*/
+    }, []);
 
     const handleDateChange = (newDate: Dayjs | null) => {
         setCurrentDate(newDate);
@@ -76,7 +77,7 @@ export function AppView() {
         }
 
         if (currentDate != null) {
-            await saveData(currentUserId, currentDate.format("YYYY-MM-DD"), dayTracking);
+            await saveTrackingDataForDay(currentUserId, currentDate.format("YYYY-MM-DD"), dayTracking);
         }
     }
 
@@ -104,7 +105,7 @@ export function AppView() {
         loadData();
     }, [currentDate, currentUserId, loadData]);
 
-    /*if (!currentUser) {
+    /*if (!currentFirebaseUser) {
         return <AuthScreen/>
     }*/
 
