@@ -1,8 +1,22 @@
-import {Button, Card, CardContent, CardHeader, Grid2 as Grid, Typography, useColorScheme} from '@mui/material';
+import {
+    Box,
+    Button,
+    Card,
+    CardContent,
+    CardHeader,
+    Grid2 as Grid,
+    TextField,
+    Typography,
+    useColorScheme
+} from '@mui/material';
 import {Nightlight, WbSunny} from '@mui/icons-material';
-import {auth} from '../firebase';
 
-export function SettingsScreen() {
+export interface SettingsScreenProps {
+    currentUserId: string;
+    setCurrentUserId: (userId: string) => void;
+}
+
+export function SettingsScreen({currentUserId, setCurrentUserId}: SettingsScreenProps) {
 
     const {mode, setMode} = useColorScheme();
 
@@ -10,13 +24,13 @@ export function SettingsScreen() {
         setMode(mode === 'light' ? 'dark' : 'light');
     }
 
-    const signOutOfAccount = async () => {
+    /*const signOutOfAccount = async () => {
         await auth.signOut()
-    }
+    }*/
 
     return (
-        <div>
-            <Typography variant="h1">Settings</Typography>
+        <Box>
+            <Typography variant="h2">Settings</Typography>
 
             <Grid container={true}
                   alignItems="center"
@@ -35,6 +49,16 @@ export function SettingsScreen() {
 
                 <Grid>
                     <Card sx={{width: 300, margin: 1}}>
+                        <CardHeader title="User ID"/>
+                        <CardContent>
+                            <TextField label="User ID" value={currentUserId}
+                                       onChange={e => setCurrentUserId(e.target.value)}/>
+                        </CardContent>
+                    </Card>
+                </Grid>
+
+                {/*<Grid>
+                    <Card sx={{width: 300, margin: 1}}>
                         <CardHeader title="Sign out"/>
                         <CardContent>
                             <Button variant="contained" onClick={signOutOfAccount}>
@@ -42,8 +66,8 @@ export function SettingsScreen() {
                             </Button>
                         </CardContent>
                     </Card>
-                </Grid>
+                </Grid>*/}
             </Grid>
-        </div>
+        </Box>
     )
 }

@@ -1,8 +1,8 @@
 // Import the functions you need from the SDKs you need
 import {initializeApp} from "firebase/app";
-import {getAnalytics} from "firebase/analytics";
-import {getDatabase} from "firebase/database";
 import {getAuth} from "firebase/auth";
+import {doc, getFirestore, onSnapshot, setDoc} from "firebase/firestore";
+import {FirebaseDayTracking} from './types/FirebaseDayTracking';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -21,7 +21,21 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const analytics = getAnalytics(app);
-const db = getDatabase(app);
+const db = getFirestore(app);
 
-export {app, analytics, auth, db};
+const saveData = async (userId: string, docId: string, data: unknown) => {
+    console.log('Saving data', {userId, docId}, data);
+    await setDoc(doc(db, userId, docId), data);
+}
+
+const getTrackingDataForDay = async (userId: string, dateString: string, onUpdate: (data: FirebaseDayTracking) => void) => {
+    return onSnapshot(doc(db, userId, dateString), (doc) => {
+        if (doc.exists()) {
+            onUpdate(doc.data() as FirebaseDayTracking)
+        } else {
+            onUpdate({} as FirebaseDayTracking)
+        }
+    });
+}
+
+export {app, auth, db, saveData, getTrackingDataForDay};

@@ -1,4 +1,4 @@
-import {Checkbox, FormControlLabel, Grid2 as Grid, InputAdornment, TextField} from '@mui/material';
+import {Button, Checkbox, FormControlLabel, Grid2 as Grid, InputAdornment, TextField} from '@mui/material';
 import UrgencyComponent from '../components/tracker/UrgencyComponent';
 import {ChangeEvent} from 'react';
 import {FoodEatenComponent} from '../components/tracker/FoodEatenComponent';
@@ -20,6 +20,9 @@ export interface TrackerScreenProps {
     onMealBathroomTimeChange: (newMealBathroomTime: number) => void;
     hadCaffeine: boolean;
     onCaffeineChange: (newCaffeine: boolean) => void;
+    notes: string;
+    onNotesChange: (newNotes: string) => void;
+    onSave: () => void;
 }
 
 export function TrackerScreen(
@@ -35,7 +38,10 @@ export function TrackerScreen(
         mealBathroomTime,
         onMealBathroomTimeChange,
         hadCaffeine,
-        onCaffeineChange
+        onCaffeineChange,
+        notes,
+        onNotesChange,
+        onSave,
     }: TrackerScreenProps
 ) {
     const handleMealBathroomTimeChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -46,6 +52,11 @@ export function TrackerScreen(
     const handleCaffeineChange = (event: ChangeEvent<HTMLInputElement>) => {
         const newCaffeine = event.target.checked;
         onCaffeineChange(newCaffeine);
+    }
+
+    const handleNotesChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const newNotes = event.target.value;
+        onNotesChange(newNotes);
     }
 
     return (
@@ -68,10 +79,9 @@ export function TrackerScreen(
             <FormControlLabel sx={{marginTop: 2}}
                               control={<Checkbox value={hadCaffeine} onChange={handleCaffeineChange}/>}
                               label="Had caffeine"/>
-            {/*<br/>
-            <code style={{marginTop: 1}}>
-                {JSON.stringify({foodEaten, urgency, consistency, mealBathroomTime, hadCaffeine}, null, 2)}
-            </code>*/}
+            <TextField multiline={true} rows={4} sx={{marginTop: 2, width: 300}} label="Notes" value={notes}
+                       onChange={handleNotesChange}/>
+            <Button variant="contained" size="large" sx={{mt: 2}} onClick={onSave}>Save</Button>
         </Grid>
     )
 }
