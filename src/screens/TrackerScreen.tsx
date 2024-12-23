@@ -12,6 +12,8 @@ export interface TrackerScreenProps {
     onDateChange: (newDate: Dayjs | null) => void;
     foodEaten: Food | null;
     onFoodEatenChange: (newFoodEaten: Food) => void;
+    otherFood: string | null;
+    onOtherFoodChange: (newOtherFood: string) => void;
     urgency: number;
     onUrgencyChange: (newUrgency: number) => void;
     consistency: number;
@@ -31,6 +33,8 @@ export function TrackerScreen(
         onDateChange,
         foodEaten,
         onFoodEatenChange,
+        otherFood,
+        onOtherFoodChange,
         urgency,
         onUrgencyChange,
         consistency,
@@ -62,7 +66,8 @@ export function TrackerScreen(
     return (
         <Grid container direction="column" alignItems="center">
             <DateComponent date={selectedDate} onDateChange={onDateChange}/>
-            <FoodEatenComponent foodEaten={foodEaten} onFoodEatenChange={onFoodEatenChange}/>
+            <FoodEatenComponent foodEaten={foodEaten} onFoodEatenChange={onFoodEatenChange}
+                                otherFood={otherFood} onOtherFoodChange={onOtherFoodChange}/>
             <UrgencyComponent urgency={urgency} onUrgencyChange={onUrgencyChange}/>
             <ConsistencyComponent consistency={consistency} onConsistencyChange={onConsistencyChange}/>
             <TextField

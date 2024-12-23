@@ -15,6 +15,7 @@ export function AppView() {
     //const [currentFirebaseUser, setCurrentFirebaseUser] = useState(auth.currentUser);
     const [currentDate, setCurrentDate] = useState<Dayjs | null>(dayjs());
     const [foodEaten, setFoodEaten] = useState<Food | null>(null);
+    const [otherFood, setOtherFood] = useState<string | null>(null);
     const [urgency, setUrgency] = useState(0);
     const [consistency, setConsistency] = useState(0);
     const [mealBathroomTime, setMealBathroomTime] = useState(0);
@@ -49,6 +50,10 @@ export function AppView() {
         setFoodEaten(newFoodEaten);
     }
 
+    const handleOtherFoodChange = (newOtherFood: string) => {
+        setOtherFood(newOtherFood);
+    }
+
     const handleUrgencyChange = (newUrgency: number) => {
         setUrgency(newUrgency);
     }
@@ -81,6 +86,7 @@ export function AppView() {
     const handleSave = async () => {
         const dayTracking = {
             foodEatenId: foodEaten?.id ?? '',
+            otherFood,
             urgency,
             consistency,
             mealBathroomTime,
@@ -103,6 +109,7 @@ export function AppView() {
         if (currentDate && currentUserId) {
             return getTrackingDataForDay(currentUserId, currentDate.format("YYYY-MM-DD"), (data) => {
                 setFoodEaten(data.foodEatenId ? {id: data.foodEatenId, label: 'Food'} : null);
+                setOtherFood(data.otherFood || null);
                 setUrgency(data.urgency || 0);
                 setConsistency(data.consistency || 0);
                 setMealBathroomTime(data.mealBathroomTime || 0);
@@ -111,6 +118,7 @@ export function AppView() {
             });
         } else {
             setFoodEaten(null);
+            setOtherFood(null);
             setUrgency(0);
             setConsistency(0);
             setMealBathroomTime(0);
@@ -138,6 +146,7 @@ export function AppView() {
                 return <TrackerScreen
                     selectedDate={currentDate} onDateChange={handleDateChange}
                     foodEaten={foodEaten} onFoodEatenChange={handleFoodEatenChange}
+                    otherFood={otherFood} onOtherFoodChange={handleOtherFoodChange}
                     urgency={urgency} onUrgencyChange={handleUrgencyChange}
                     consistency={consistency} onConsistencyChange={handleConsistencyChange}
                     mealBathroomTime={mealBathroomTime} onMealBathroomTimeChange={handleMealBathroomTimeChange}
