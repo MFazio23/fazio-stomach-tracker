@@ -5,6 +5,7 @@ import {
     CardContent,
     CardHeader,
     Grid2 as Grid,
+    Link,
     TextField,
     Typography,
     useColorScheme
@@ -68,6 +69,10 @@ export function SettingsScreen({currentUserId, setCurrentUserId}: SettingsScreen
                     </Card>
                 </Grid>*/}
             </Grid>
+            <Typography variant="subtitle2">
+                <Link href="https://www.flaticon.com/free-icons/toilet" title="toilet icons">Toilet icons created by
+                    Freepik - Flaticon</Link>
+            </Typography>
         </Box>
     )
 }

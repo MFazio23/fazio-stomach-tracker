@@ -3,6 +3,7 @@ import {red} from '@mui/material/colors';
 
 export const themeColors = {
     cafeNoir: '#563F1B',
+    darkerBrown: '#322004',
     icterine: '#F7F052',
     orangeWheel: '#F28123',
     syracuseOrangeRed: '#D34E24',
