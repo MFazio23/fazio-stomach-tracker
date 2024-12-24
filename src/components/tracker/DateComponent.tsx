@@ -14,7 +14,7 @@ export const DateComponent = ({date, onDateChange}: DateComponentProps) => {
         onDateChange(date.add(delta, 'day'));
     }
     return (
-        <Box display="flex" alignItems="center" justifyContent="space-between" width={300}>
+        <Box display="flex" alignItems="center" justifyContent="space-between" width={300} mt={3}>
             <Button variant="contained" onClick={changeDate(-1)} sx={{minWidth: 32, fontWeight: 'bold'}}>{"<"}</Button>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker label="Date" value={date} onChange={onDateChange} closeOnSelect={true}

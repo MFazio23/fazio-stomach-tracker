@@ -1,4 +1,4 @@
-import {Button, Checkbox, FormControlLabel, Grid2 as Grid, InputAdornment, TextField} from '@mui/material';
+import {Button, Checkbox, FormControlLabel, Grid2 as Grid, InputAdornment, TextField, Typography} from '@mui/material';
 import UrgencyComponent from '../components/tracker/UrgencyComponent';
 import {ChangeEvent} from 'react';
 import {FoodEatenComponent} from '../components/tracker/FoodEatenComponent';
@@ -65,6 +65,7 @@ export function TrackerScreen(
 
     return (
         <Grid container direction="column" alignItems="center">
+            <Typography variant="h4">The Poop-A-Tron 3000</Typography>
             <DateComponent date={selectedDate} onDateChange={onDateChange}/>
             <FoodEatenComponent foodEaten={foodEaten} onFoodEatenChange={onFoodEatenChange}
                                 otherFood={otherFood} onOtherFoodChange={onOtherFoodChange}/>
