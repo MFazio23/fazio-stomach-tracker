@@ -159,7 +159,7 @@ export function AppView() {
     return (
         <main>
             <Box id="main-box" position='relative' height="100vh" display="flex" flexDirection="column" py={3}>
-                <Box>
+                <Box pb={8}>
                     {currentScreen()}
                 </Box>
 
