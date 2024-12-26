@@ -10,7 +10,7 @@ import {FirebaseDayTracking} from './types/FirebaseDayTracking';
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
     apiKey: "AIzaSyBUHMnwrMJcBmizCchrqfmDU1jEr7Ov2iY",
-    authDomain: "fazio-gym-tracker.firebaseapp.com",
+    authDomain: "poop.mfazio.dev",
     projectId: "fazio-gym-tracker",
     storageBucket: "fazio-gym-tracker.firebasestorage.app",
     messagingSenderId: "1027995780177",
