@@ -3,9 +3,3 @@ from = '/__/auth/*'
 to = 'https://fazio-gym-tracker.firebaseapp.com/__/auth/:splat'
 status = 200
 force = true
-
-[[redirects]]
-from = '/__/firebase/*'
-to = 'https://fazio-gym-tracker.firebaseapp.com/__/firebase/:splat'
-status = 200
-force = true
