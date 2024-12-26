@@ -1,23 +1,35 @@
 import {Box, Button, Typography} from '@mui/material';
-import {getRedirectResult, GoogleAuthProvider, signInWithPopup} from 'firebase/auth';
+import {GoogleAuthProvider, signInWithPopup} from 'firebase/auth';
 import {auth} from '../firebase';
 
-export function AuthScreen() {
+export interface AuthScreenProps {
+    onAuthError: (errorMessage: string, error?: Error) => void;
+}
+
+export function AuthScreen({onAuthError}: AuthScreenProps) {
     const provider = new GoogleAuthProvider();
 
     const handleSignInClicked = async () => {
-        await signInWithPopup(auth, provider)
+        try {
+            await signInWithPopup(auth, provider)
+        } catch (e) {
 
-        const userCred = await getRedirectResult(auth);
+            const error = e instanceof Error ? e : undefined;
 
-        console.log("User cred", userCred)
+            const errorMessage = error?.message ?? "Error signing in";
+
+            onAuthError(errorMessage, error);
+        }
     }
 
     return (
-        <Box>
-            <Typography variant="h2">Auth</Typography>
+        <Box display="flex" flexDirection="column" alignItems="center">
+            <Typography variant="h2" mb={3}>The Poop-A-Tron 3000</Typography>
+            <img src="/poopatron-logo.svg" alt="Poop-A-Tron 3000 Logo" style={{width: 300}}/>
             {/*TODO: Make this look like a proper sign in button*/}
-            <Button variant={'contained'} onClick={handleSignInClicked}>Sign in with Google</Button>
+            <Button variant={'contained'} onClick={handleSignInClicked} sx={{width: 300, marginTop: 3}}>
+                Sign in with Google
+            </Button>
         </Box>
     );
 }

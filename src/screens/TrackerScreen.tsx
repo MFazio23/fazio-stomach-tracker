@@ -6,8 +6,10 @@ import {Food} from '../types/Food';
 import ConsistencyComponent from '../components/tracker/ConsistencyComponent';
 import {DateComponent} from '../components/tracker/DateComponent';
 import {Dayjs} from 'dayjs';
+import {User} from 'firebase/auth';
 
 export interface TrackerScreenProps {
+    currentFirebaseUser: User;
     selectedDate: Dayjs | null;
     onDateChange: (newDate: Dayjs | null) => void;
     foodEaten: Food | null;
@@ -29,6 +31,7 @@ export interface TrackerScreenProps {
 
 export function TrackerScreen(
     {
+        currentFirebaseUser,
         selectedDate,
         onDateChange,
         foodEaten,
@@ -66,6 +69,8 @@ export function TrackerScreen(
     return (
         <Grid container direction="column" alignItems="center">
             <Typography variant="h4">The Poop-A-Tron 3000</Typography>
+            {currentFirebaseUser?.displayName ?
+                <Typography variant="subtitle2">Hello, {currentFirebaseUser.displayName}!</Typography> : null}
             <DateComponent date={selectedDate} onDateChange={onDateChange}/>
             <FoodEatenComponent foodEaten={foodEaten} onFoodEatenChange={onFoodEatenChange}
                                 otherFood={otherFood} onOtherFoodChange={onOtherFoodChange}/>

@@ -8,11 +8,12 @@ import {TabName} from './types/TabName';
 import {Food} from './types/Food';
 import dayjs, {Dayjs} from 'dayjs';
 import {auth, getTrackingDataForDay, saveTrackingDataForDay} from './firebase';
+import {AuthScreen} from './screens/AuthScreen';
+import {User} from 'firebase/auth';
 
 export function AppView() {
-    const [currentUserId, setCurrentUser] = useState<string>(localStorage.getItem('userId') || '');
+    const [currentUser, setCurrentUser] = useState<User | null>(auth.currentUser);
     const [currentTab, setCurrentTab] = useState<TabName>('tracker');
-    //const [currentFirebaseUser, setCurrentFirebaseUser] = useState(auth.currentUser);
     const [currentDate, setCurrentDate] = useState<Dayjs | null>(dayjs());
     const [foodEaten, setFoodEaten] = useState<Food | null>(null);
     const [otherFood, setOtherFood] = useState<string | null>(null);
@@ -27,18 +28,13 @@ export function AppView() {
 
     useEffect(() => {
         auth.onAuthStateChanged((user) => {
-            //setCurrentFirebaseUser(user);
+            setCurrentUser(user);
             console.log("Firebase user", user);
         });
     }, []);
 
     const handleDateChange = (newDate: Dayjs | null) => {
         setCurrentDate(newDate);
-    }
-
-    const handleCurrentUserIdChange = (newUserId: string) => {
-        setCurrentUser(newUserId);
-        localStorage.setItem('userId', newUserId);
     }
 
     //TODO: Save all these to Firebase
@@ -96,7 +92,8 @@ export function AppView() {
 
         if (currentDate != null) {
             try {
-                await saveTrackingDataForDay(currentUserId, currentDate.format("YYYY-MM-DD"), dayTracking);
+                if (!currentUser) return;
+                await saveTrackingDataForDay(currentUser.uid, currentDate.format("YYYY-MM-DD"), dayTracking);
                 handleSnackbar("Data saved");
             } catch (e) {
                 console.error("Error saving data", e);
@@ -106,8 +103,8 @@ export function AppView() {
     }
 
     const loadData = useCallback(async () => {
-        if (currentDate && currentUserId) {
-            return getTrackingDataForDay(currentUserId, currentDate.format("YYYY-MM-DD"), (data) => {
+        if (currentDate && currentUser?.uid) {
+            return getTrackingDataForDay(currentUser.uid, currentDate.format("YYYY-MM-DD"), (data) => {
                 setFoodEaten(data.foodEatenId ? {id: data.foodEatenId, label: 'Food'} : null);
                 setOtherFood(data.otherFood || null);
                 setUrgency(data.urgency || 0);
@@ -125,25 +122,27 @@ export function AppView() {
             setHadCaffeine(false);
             setNotes('');
         }
-    }, [currentDate, currentUserId]);
+    }, [currentDate, currentUser?.uid]);
 
     useEffect(() => {
         loadData();
-    }, [currentDate, currentUserId, loadData]);
+    }, [currentDate, currentUser?.uid, loadData]);
 
-    /*if (!currentFirebaseUser) {
-        return <AuthScreen/>
-    }*/
+    if (!currentUser) {
+        return <AuthScreen onAuthError={() => {
+        }}/>
+    }
 
     const currentScreen = () => {
         switch (currentTab) {
             case 'calendar':
                 return <CalendarScreen/>;
             case 'settings':
-                return <SettingsScreen currentUserId={currentUserId} setCurrentUserId={handleCurrentUserIdChange}/>;
+                return <SettingsScreen currentUser={currentUser}/>;
             case 'tracker':
             default:
                 return <TrackerScreen
+                    currentFirebaseUser={currentUser}
                     selectedDate={currentDate} onDateChange={handleDateChange}
                     foodEaten={foodEaten} onFoodEatenChange={handleFoodEatenChange}
                     otherFood={otherFood} onOtherFoodChange={handleOtherFoodChange}
